@@ -20,10 +20,7 @@ import {
     CardTitle,
 } from "@/components/ui/card"
 import { Sun, Battery, DollarSign, Leaf } from 'lucide-react';
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Search } from "lucide-react";
 import GoogleSolarApi from "./GoogleSolarData";
 
 // Simple type definitions
