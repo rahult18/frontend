@@ -22,7 +22,7 @@ import {
 import { Sun, Battery, DollarSign, Leaf } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import GoogleSolarApi from "./GoogleSolarData";
-import Marketplace from "../components/marketplace";
+import Marketplace from "../components/Marketplace";
 
 // Simple type definitions
 type SolarData = {
