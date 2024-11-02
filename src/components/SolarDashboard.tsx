@@ -22,6 +22,7 @@ import {
 import { Sun, Battery, DollarSign, Leaf } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import GoogleSolarApi from "./GoogleSolarData";
+import Marketplace from "../components/marketplace";
 
 // Simple type definitions
 type SolarData = {
@@ -165,6 +166,10 @@ export default function SolarIrradiance({ address }: SolarIrradianceProps) {
 
             {/* Key Metrics Cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <h1 className="text-2xl font-extrabold tracking-tight sm:text-5xl lg:text-3xl">
+                    Market Place
+                </h1>
+                <Marketplace />
                 <MetricCard
                     icon={<Sun className="h-6 w-6 text-yellow-500" />}
                     title="Annual Production"
