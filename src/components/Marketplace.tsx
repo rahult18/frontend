@@ -9,6 +9,7 @@ import {
 import { Zap, ThermometerSun, Shield, Timer, Wrench, DollarSign, X } from 'lucide-react';
 
 // Dialog component implementation
+// eslint-disable-next-line
 const Dialog = ({ open, onOpenChange, children }) => {
   if (!open) return null;
 
