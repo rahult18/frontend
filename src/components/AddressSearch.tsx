@@ -8,7 +8,7 @@ interface AddressSearchProps {
 }
 
 const AddressSearch: React.FC<AddressSearchProps> = ({ onSubmit }) => {
-  const [searchInput, setSearchInput] = useState('158 Niagara Falls Blvd, Buffalo, NY');
+  const [searchInput, setSearchInput] = useState('');
   const [error, setError] = useState('');
 
   const handleSubmit = (e: React.FormEvent) => {

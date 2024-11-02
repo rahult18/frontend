@@ -23,7 +23,7 @@ const App: React.FC = () => {
               <Sun className="h-16 w-16 text-yellow-500 animate-pulse" />
             </div>
             <h1 className="text-4xl font-bold text-gray-800 mb-4">
-              Solar Savings Insights
+              Solar Nova
             </h1>
             <p className="text-gray-600 max-w-md mx-auto">
               Discover your home's solar potential and estimated savings with our advanced solar calculator

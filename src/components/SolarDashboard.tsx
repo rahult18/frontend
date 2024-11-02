@@ -215,7 +215,8 @@ const geocodeAddress = async (address: string): Promise<[number, number] | null>
     try {
         console.log("Address from params:" + address);
         const encodedAddress = encodeURIComponent(address);
-        const response = await fetch(`https://geocode.maps.co/search?q=${encodedAddress}`);
+        const GEOCODE_API_KEY = "6726743915073041757636gkw9e180b";
+        const response = await fetch(`https://geocode.maps.co/search?q=${encodedAddress}&api_key=${GEOCODE_API_KEY}`);
         const data = await response.json();
         console.log("data: ", data);
 

@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/card';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
-import { Sun, Leaf, DollarSign, Battery } from 'lucide-react';
+import { Sun, Home, Battery, PiggyBank, BarChart2 } from 'lucide-react';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
 
 interface LatLng {
     latitude: number;
@@ -192,11 +194,12 @@ const GoogleSolarApi: React.FC<GoogleSolarApiProps> = ({ latitude, longitude }) 
         return savingsYear20 > bestSavingsYear20 ? analysis : best;
     }, financialAnalyses[0]);
 
-    // Prepare data for roof segment chart
+
     const roofSegmentData = roofSegmentStats.map((segment, index) => ({
         name: `Segment ${index + 1}`,
-        area: segment.stats.areaMeters2,
-        sunshine: segment.stats.sunshineQuantiles[5],
+        value: segment.stats.areaMeters2,
+        pitchDegrees: segment.pitchDegrees,
+        azimuthDegrees: segment.azimuthDegrees,
     }));
 
     // Prepare data for solar panel configurations chart
@@ -207,115 +210,183 @@ const GoogleSolarApi: React.FC<GoogleSolarApiProps> = ({ latitude, longitude }) 
     }));
 
     // Define colors for the charts
-    const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
+    const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8', '#82CA9D'];
 
     return (
-        <div className="space-y-6">
-            {/* Building Overview */}
-            <Card>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <Card className="md:col-span-2">
                 <CardHeader>
-                    <CardTitle>Building Overview</CardTitle>
+                    <CardTitle className="flex items-center">
+                        <BarChart2 className="mr-2" size={24} /> Overall Solar Potential
+                    </CardTitle>
                 </CardHeader>
                 <CardContent>
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div>
-                            <p className="text-lg font-semibold">Building Information</p>
-                            <p>Name: {buildingInsights.name}</p>
-                            <p>Postal Code: {buildingInsights.postalCode}</p>
-                            <p>Administrative Area: {buildingInsights.administrativeArea}</p>
+                            <p className="font-semibold">Max Panel Count</p>
+                            <p className="text-2xl">{solarPotential.maxArrayPanelsCount}</p>
                         </div>
                         <div>
-                            <p className="text-lg font-semibold">Solar Potential</p>
-                            <p>Max Panel Count: {solarPotential.maxArrayPanelsCount}</p>
-                            <p>Max Array Area: {solarPotential.maxArrayAreaMeters2.toFixed(2)} m²</p>
-                            <p>Max Sunshine Hours/Year: {solarPotential.maxSunshineHoursPerYear}</p>
+                            <p className="font-semibold">Max Array Area</p>
+                            <p className="text-2xl">{solarPotential.maxArrayAreaMeters2.toFixed(2)} m²</p>
+                        </div>
+                        <div>
+                            <p className="font-semibold">Max Sunshine Hours/Year</p>
+                            <p className="text-2xl">{solarPotential.maxSunshineHoursPerYear}</p>
                         </div>
                     </div>
                 </CardContent>
             </Card>
 
-            {/* Roof Segment Analysis */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <Card>
+                <CardHeader>
+                    <CardTitle className="flex items-center">
+                        <Home className="mr-2" size={24} /> Building Overview
+                    </CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <Table>
+                        <TableBody>
+                            <TableRow>
+                                <TableCell>Name</TableCell>
+                                <TableCell>{buildingInsights.name}</TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell>Postal Code</TableCell>
+                                <TableCell>{buildingInsights.postalCode}</TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell>Administrative Area</TableCell>
+                                <TableCell>{buildingInsights.administrativeArea}</TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell>Max Panel Count</TableCell>
+                                <TableCell>{solarPotential.maxArrayPanelsCount}</TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell>Max Array Area</TableCell>
+                                <TableCell>{solarPotential.maxArrayAreaMeters2.toFixed(2)} m²</TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell>Max Sunshine Hours/Year</TableCell>
+                                <TableCell>{solarPotential.maxSunshineHoursPerYear}</TableCell>
+                            </TableRow>
+                        </TableBody>
+                    </Table>
+                </CardContent>
+            </Card>
 
-            
             <Card>
                 <CardHeader className='w-full'>
-                    <CardTitle>Roof Segment Analysis</CardTitle>
+                    <CardTitle className="flex items-center">
+                        <Sun className="mr-2" size={24} /> Roof Segment Analysis
+                    </CardTitle>
                     <CardDescription>
                         Total Roof Area: {totalRoofArea.toFixed(2)} m² | Total Sunshine Hours: {totalSunshineHours.toFixed(2)}
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
                     <ResponsiveContainer width="100%" height="100%">
-                        <BarChart data={roofSegmentData} width={650} height={300} margin={{ top: 10, right: 30, left: 20, bottom: 20 }}>
-                            <XAxis dataKey="name" />
-                            <YAxis />
+                        <PieChart width={650} height={300}>
+                            <Pie
+                                data={roofSegmentData}
+                                cx="50%"
+                                cy="50%"
+                                labelLine={false}
+                                innerRadius={0}
+                                outerRadius={80}
+                                fill="#8884d8"
+                                dataKey="value"
+                            >
+                                {roofSegmentData.map((entry, index) => (
+                                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                                ))}
+                            </Pie>
                             <Tooltip />
                             <Legend wrapperStyle={{ paddingTop: '10px' }} />
-                            <Bar dataKey="area" fill="#8884d8" name="Area (m²)" />
-                            <Bar dataKey="sunshine" fill="#82ca9d" name="Sunshine Hours" />
-                        </BarChart>
+                        </PieChart>
                     </ResponsiveContainer>
                 </CardContent>
             </Card>
 
-            {/* Solar Panel Configurations */}
             <Card>
                 <CardHeader className='w-full'>
-                    <CardTitle>Solar Panel Configurations</CardTitle>
+                    <CardTitle className="flex items-center">
+                        <Battery className="mr-2" size={24} /> Solar Panel Configuration
+                    </CardTitle>
                     <CardDescription>
                         Best Configuration: {bestPanelConfig.panelsCount} panels | Energy: {bestPanelConfig.yearlyEnergyDcKwh.toFixed(2)} kWh/year
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
                     <ResponsiveContainer width="100%" height="100%">
-                        <BarChart data={panelConfigData} width={650} height={300} margin={{ top: 10, right: 30, left: 20, bottom: 20 }}>
+                        <BarChart data={panelConfigData} height={300} width={650}>
                             <XAxis dataKey="name" />
-                            <YAxis />
+                            <YAxis yAxisId="left" orientation="left" stroke="#8884d8" />
+                            <YAxis yAxisId="right" orientation="right" stroke="#82ca9d" />
                             <Tooltip />
                             <Legend wrapperStyle={{ paddingTop: '10px' }} />
-                            <Bar dataKey="panels" fill="#8884d8" name="Panels" />
-                            <Bar dataKey="energy" fill="#82ca9d" name="Energy (kWh/year)" />
+                            <Bar yAxisId="left" dataKey="panels" fill="#8884d8" name="Panels" />
+                            <Bar yAxisId="right" dataKey="energy" fill="#82ca9d" name="Energy (kWh/year)" />
                         </BarChart>
                     </ResponsiveContainer>
                 </CardContent>
             </Card>
-            </div>
-            {/* Financial Analysis */}
+
             <Card>
                 <CardHeader>
-                    <CardTitle>Financial Analysis</CardTitle>
+                    <CardTitle className="flex items-center">
+                        <PiggyBank className="mr-2" size={24} /> Financial Insights
+                    </CardTitle>
                     <CardDescription>
                         Best Savings (Year 20): {bestFinancialAnalysis.cashPurchaseSavings?.savings?.savingsYear20?.currencyCode}{' '}
                         {bestFinancialAnalysis.cashPurchaseSavings?.savings?.savingsYear20?.units.toLocaleString()}
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        {financialAnalyses.map((analysis, index) => (
-                            <div key={index}>
-                                <p className="text-lg font-semibold">Analysis {index + 1}</p>
-                                <p>Monthly Bill: {analysis.monthlyBill.currencyCode} {analysis.monthlyBill.units}</p>
-                                {analysis.financialDetails && (
-                                    <div className="mt-2">
-                                        <p>Initial AC kWh/Year: {analysis.financialDetails.initialAcKwhPerYear.toFixed(2)}</p>
-                                        <p>
-                                            Remaining Lifetime Utility Bill: {analysis.financialDetails.remainingLifetimeUtilityBill.currencyCode}{' '}
-                                            {analysis.financialDetails.remainingLifetimeUtilityBill.units}
-                                        </p>
-                                        <p>
-                                            Federal Incentive: {analysis.financialDetails.federalIncentive.currencyCode}{' '}
-                                            {analysis.financialDetails.federalIncentive.units}
-                                        </p>
-                                        <p>Solar Percentage: {analysis.financialDetails.solarPercentage.toFixed(2)}%</p>
-                                    </div>
-                                )}
-                            </div>
-                        ))}
-                    </div>
+                    <Table>
+                        <TableBody>
+                            {financialAnalyses.map((analysis, index) => (
+                                <React.Fragment key={index}>
+                                    <TableRow>
+                                        <TableCell colSpan={2} className="font-semibold">Analysis {index + 1}</TableCell>
+                                    </TableRow>
+                                    <TableRow>
+                                        <TableCell>Monthly Bill</TableCell>
+                                        <TableCell>{analysis.monthlyBill.currencyCode} {analysis.monthlyBill.units}</TableCell>
+                                    </TableRow>
+                                    {analysis.financialDetails && (
+                                        <>
+                                            <TableRow>
+                                                <TableCell>Initial AC kWh/Year</TableCell>
+                                                <TableCell>{analysis.financialDetails.initialAcKwhPerYear.toFixed(2)}</TableCell>
+                                            </TableRow>
+                                            <TableRow>
+                                                <TableCell>Remaining Lifetime Utility Bill</TableCell>
+                                                <TableCell>
+                                                    {analysis.financialDetails.remainingLifetimeUtilityBill.currencyCode}{' '}
+                                                    {analysis.financialDetails.remainingLifetimeUtilityBill.units}
+                                                </TableCell>
+                                            </TableRow>
+                                            <TableRow>
+                                                <TableCell>Federal Incentive</TableCell>
+                                                <TableCell>
+                                                    {analysis.financialDetails.federalIncentive.currencyCode}{' '}
+                                                    {analysis.financialDetails.federalIncentive.units}
+                                                </TableCell>
+                                            </TableRow>
+                                            <TableRow>
+                                                <TableCell>Solar Percentage</TableCell>
+                                                <TableCell>{analysis.financialDetails.solarPercentage.toFixed(2)}%</TableCell>
+                                            </TableRow>
+                                        </>
+                                    )}
+                                </React.Fragment>
+                            ))}
+                        </TableBody>
+                    </Table>
                 </CardContent>
             </Card>
-
         </div>
     );
 };
