@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/card';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
-import { Sun, Home, Battery, PiggyBank, BarChart2 } from 'lucide-react';
+import { Sun, Home, Battery, PiggyBank, BarChart2, TrendingUp, DollarSign, Percent, Zap } from 'lucide-react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 
@@ -336,7 +336,7 @@ const GoogleSolarApi: React.FC<GoogleSolarApiProps> = ({ latitude, longitude }) 
             <Card>
                 <CardHeader>
                     <CardTitle className="flex items-center">
-                        <PiggyBank className="mr-2" size={24} /> Financial Insights
+                        <PiggyBank className="mr-2" size={24} /> Best Financial Analysis
                     </CardTitle>
                     <CardDescription>
                         Best Savings (Year 20): {bestFinancialAnalysis.cashPurchaseSavings?.savings?.savingsYear20?.currencyCode}{' '}
@@ -346,47 +346,54 @@ const GoogleSolarApi: React.FC<GoogleSolarApiProps> = ({ latitude, longitude }) 
                 <CardContent>
                     <Table>
                         <TableBody>
-                            {financialAnalyses.map((analysis, index) => (
-                                <React.Fragment key={index}>
+                            <TableRow>
+                                <TableCell className="flex items-center">
+                                    <DollarSign className="mr-2" size={16} /> Monthly Bill
+                                </TableCell>
+                                <TableCell>
+                                    {bestFinancialAnalysis.monthlyBill.currencyCode} {bestFinancialAnalysis.monthlyBill.units}
+                                </TableCell>
+                            </TableRow>
+                            {bestFinancialAnalysis.financialDetails && (
+                                <>
                                     <TableRow>
-                                        <TableCell colSpan={2} className="font-semibold">Analysis {index + 1}</TableCell>
+                                        <TableCell className="flex items-center">
+                                            <Zap className="mr-2" size={16} /> Initial AC kWh/Year
+                                        </TableCell>
+                                        <TableCell>{bestFinancialAnalysis.financialDetails.initialAcKwhPerYear.toFixed(2)}</TableCell>
                                     </TableRow>
                                     <TableRow>
-                                        <TableCell>Monthly Bill</TableCell>
-                                        <TableCell>{analysis.monthlyBill.currencyCode} {analysis.monthlyBill.units}</TableCell>
+                                        <TableCell className="flex items-center">
+                                            <TrendingUp className="mr-2" size={16} /> Remaining Lifetime Utility Bill
+                                        </TableCell>
+                                        <TableCell>
+                                            {bestFinancialAnalysis.financialDetails.remainingLifetimeUtilityBill.currencyCode}{' '}
+                                            {bestFinancialAnalysis.financialDetails.remainingLifetimeUtilityBill.units}
+                                        </TableCell>
                                     </TableRow>
-                                    {analysis.financialDetails && (
-                                        <>
-                                            <TableRow>
-                                                <TableCell>Initial AC kWh/Year</TableCell>
-                                                <TableCell>{analysis.financialDetails.initialAcKwhPerYear.toFixed(2)}</TableCell>
-                                            </TableRow>
-                                            <TableRow>
-                                                <TableCell>Remaining Lifetime Utility Bill</TableCell>
-                                                <TableCell>
-                                                    {analysis.financialDetails.remainingLifetimeUtilityBill.currencyCode}{' '}
-                                                    {analysis.financialDetails.remainingLifetimeUtilityBill.units}
-                                                </TableCell>
-                                            </TableRow>
-                                            <TableRow>
-                                                <TableCell>Federal Incentive</TableCell>
-                                                <TableCell>
-                                                    {analysis.financialDetails.federalIncentive.currencyCode}{' '}
-                                                    {analysis.financialDetails.federalIncentive.units}
-                                                </TableCell>
-                                            </TableRow>
-                                            <TableRow>
-                                                <TableCell>Solar Percentage</TableCell>
-                                                <TableCell>{analysis.financialDetails.solarPercentage.toFixed(2)}%</TableCell>
-                                            </TableRow>
-                                        </>
-                                    )}
-                                </React.Fragment>
-                            ))}
+                                    <TableRow>
+                                        <TableCell className="flex items-center">
+                                            <DollarSign className="mr-2" size={16} /> Federal Incentive
+                                        </TableCell>
+                                        <TableCell>
+                                            {bestFinancialAnalysis.financialDetails.federalIncentive.currencyCode}{' '}
+                                            {bestFinancialAnalysis.financialDetails.federalIncentive.units}
+                                        </TableCell>
+                                    </TableRow>
+                                    <TableRow>
+                                        <TableCell className="flex items-center">
+                                            <Percent className="mr-2" size={16} /> Solar Percentage
+                                        </TableCell>
+                                        <TableCell>{bestFinancialAnalysis.financialDetails.solarPercentage.toFixed(2)}%</TableCell>
+                                    </TableRow>
+                                </>
+                            )}
                         </TableBody>
                     </Table>
                 </CardContent>
             </Card>
+
+
         </div>
     );
 };
