@@ -33,13 +33,6 @@ interface RoofSegmentSizeAndSunshineStats {
     planeHeightAtCenterMeters: number;
 }
 
-interface SolarPanel {
-    center: LatLng;
-    orientation: 'LANDSCAPE' | 'PORTRAIT';
-    yearlyEnergyDcKwh: number;
-    segmentIndex: number;
-}
-
 interface SolarPanelConfig {
     panelsCount: number;
     yearlyEnergyDcKwh: number;
@@ -152,8 +145,8 @@ const GoogleSolarApi: React.FC<GoogleSolarApiProps> = ({ latitude, longitude }) 
 
                 const data: BuildingInsightsResponse = await response.json();
                 setBuildingInsights(data);
-            } catch (err) {
-                setError('Error fetching solar data. Please try again.');
+            } catch (error) {
+                setError('Error fetching solar data. Please try again. '+error);
             } finally {
                 setLoading(false);
             }

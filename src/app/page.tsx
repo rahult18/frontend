@@ -26,7 +26,7 @@ const App: React.FC = () => {
               Solar Nova
             </h1>
             <p className="text-gray-600 max-w-md mx-auto">
-              Discover your home's solar potential and estimated savings with our advanced solar calculator
+              Discover your home&apos;s solar potential and estimated savings with our advanced solar calculator
             </p>
           </div>
           <AddressSearch onSubmit={handleAddressSubmit} />
